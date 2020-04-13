@@ -87,7 +87,7 @@
         - 거래를 했지만 TRANS_ID가 없으면서 구매 행동이 6인 경우가 보였습니다.
         - 고민한 끝에 이것 또한 거래 내역 페이지 확인으로 보았습니다.
         
-     
+     ![image](https://user-images.githubusercontent.com/49123169/79117360-e5768300-7dc5-11ea-9173-032fd59c4582.png)
         
      
 
