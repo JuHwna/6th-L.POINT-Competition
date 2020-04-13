@@ -91,4 +91,6 @@
         
    - 거래 정보 특징
      1) 각 계열사별 구매 주기를 구한 결과 대부분 7~14일 내에 재구매가 발생함을 알 수 있었습니다.
+     
+     ![image](https://user-images.githubusercontent.com/49123169/79122856-c41c9380-7dd3-11ea-9539-5cb490db7de6.png)
 
