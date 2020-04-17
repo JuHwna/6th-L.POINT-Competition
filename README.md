@@ -57,6 +57,26 @@
 - SQL과 파이썬을 통해 특정 조건으로 묶은 후, 숫자를 통해 이해 가능한 결과는 그대로 보았습니다.
 - 숫자로 이해하기 어려울 경우, 파이썬의 matplotlib, seaborn, plotly를 사용하여 그래프를 그렸거나 Excel을 이용해 그래프로 나타내서 봤습니다.
 
+~~~
+#파이썬으로 구현했을 때, 하나의 코드
+plt.figure()
+plt.rcParams["figure.figsize"] = (45,45)
+plt.rc('font',size=20)
+fig, ((ax1,ax2,ax3),(ax4,ax5,ax6)) = plt.subplots(2,3,sharex=False, sharey=False)
+ax1.bar(graph[graph['biz_unit']=='A01'].iloc[:,1],graph[graph['biz_unit']=='A01'].iloc[:,2])
+ax1.set_title('A01',fontsize=50)
+ax2.bar(graph[graph['biz_unit']=='A02'].iloc[:,1],graph[graph['biz_unit']=='A02'].iloc[:,2])
+ax2.set_title('A02',fontsize=50)
+ax3.bar(graph[graph['biz_unit']=='A03'].iloc[:,1],graph[graph['biz_unit']=='A03'].iloc[:,2])
+ax3.set_title('A03',fontsize=50)
+ax4.bar(graph[graph['biz_unit']=='B01'].iloc[:,1],graph[graph['biz_unit']=='B01'].iloc[:,2])
+ax4.set_title('B01',fontsize=50)
+ax5.bar(graph[graph['biz_unit']=='B02'].iloc[:,1],graph[graph['biz_unit']=='B02'].iloc[:,2])
+ax5.set_title('B02',fontsize=50)
+ax6.bar(graph[graph['biz_unit']=='B03'].iloc[:,1],graph[graph['biz_unit']=='B03'].iloc[:,2])
+ax6.set_title('B03',fontsize=50)
+~~~
+
 #### (2) 사전 조사
 - 고객 행동 유형화하기 위해 필요한 지식들을 습득하기 위해 고객 유형에 대해 논문이나 관련 사이트를 찾아 글을 읽었습니다.
   >Designing for 5 Types of E-Commerce Shoppers "Nielsen Norman Group"
@@ -97,4 +117,12 @@
       - A03은 오전 10시에 증가하여 11시에 최대치를 기록
 - 잠재고객 분석의 특징
    1) 결제시도는 했지만 구매하지 않은 고객을 발견했습니다.
-      - 온라인 행동 테이블
+      - 온라인 행동 테이블에 고객에 대한 정보가 있지만 고객테이블에 없는 경우를 발견 : **비회원고객**이라고 가정
+         - 롯데 쇼핑몰의 개인정보처리방침 약관에 따라 가정했습니다.
+   2) 구매했지만 고객정보가 없는 고객
+      - 구매했지만 고객정보가 없는 고객을 비회원고객이라고 판단했습니다.
+      - 회원과 비회원의 구매력을 비교한 결과, 회원의 구매력이 비회원의 구매력보다 높았습니다.
+   3) 결제시도를 반복하고 구매하지 않은 고객
+      - 5회 이상 연속으로 결제시도를 한 고객이 약 10%가 있는 것을 확인했습니다.
+      - 결제시도 오류 또는 어려움으로 구매완료에 실패한 사례로 분석했습니다.
+
