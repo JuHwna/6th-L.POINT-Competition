@@ -156,8 +156,53 @@ ax6.set_title('B03',fontsize=50)
 - 그래서 검색어 대신 다른 요소를 집어 넣는게 좋을 거라는 생각이 들었습니다.
   - 분석 결과도 안 좋게 나올 뿐더러 검색어가 특정 상품군을 설명하기가 애매했기 때문입니다.
   - ex)원피스를 검색했을 때, 이 고객이 어떤 원피스를 원하는지를 모른다.
+  
+  ![image](https://user-images.githubusercontent.com/49123169/79782318-d53c4600-8379-11ea-9e40-5fb5b512dfcb.png)
+
+  
 - 검색어 대신 검색어를 검색했을 때 나오는 브랜드와 타입을 넣기로 했습니다.
-  - 구체적으로 검색을 넣으면 
+  - 브랜드와 타입이 구체적이기 때문에 이 방법을 채택했습니다.
+  - 해당 데이터는 각 계열사에 검색어를 입력한 후 나오는 결과를 수집했습니다.
+  
+  ~~~
+  for i in range(len(unia02_kwd)):
+    
+    driver.implicitly_wait(randint(2,6))
+    driver.get('http://www.lotteimall.com/main/viewMain.lotte?dpml_no=1&tlog=00100_1')
+    a_element1=driver.find_element_by_id('headerQuery')
+    a_element1.click()
+    a_element1.send_keys(unia02_kwd[i])
+    a_element2=driver.find_element_by_id("btn_headerSearch")
+    a_element2.click()
+    
+    if ('결과' in driver.find_element_by_class_name('center').text) == True:
+
+        a_element3=driver.find_element_by_xpath('//*[@id="contents"]/fieldset[2]/div/div[2]/ul/li[4]/a')
+        a_element3.click()
+        a_element4=driver.find_elements_by_xpath("//p[@class='title']")
+        a_ss=[]
+        for w in range(len(a_element4)):
+            m = re.sub('r([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)','',a_element4[w].text)
+            m=m.replace('[','')
+            m=m.replace(']','')
+            a_ss.append(m)
+        a_ss=[x for x in a_ss if x]
+        a_s2=[j.split(' ') for j in a_ss]
+        a_s2=sum(a_s2,[])
+        a_element6=[[x,a_s2.count(x)] for x in set(a_s2)]
+        a_element6=pd.DataFrame(a_element6,columns=[i,'count'])
+        a_element6=a_element6.sort_values('count',ascending=False).iloc[:5,:].values.tolist()
+        a_element6=sum(a_element6,[])
+        a_element6=pd.Series(a_element6,name=i)
+        a02_brand2=pd.concat([a02_brand2,a_element6],axis=1)
+    else:
+        a_element6=pd.Series(['검색이 되지 않는다'])
+        a_element6=a_element6.rename(i)
+        a02_brand2=pd.concat([a02_brand2,a_element6],axis=1)
+    
+        
+    print(i)
+  ~~~
 
 
 #### 추천 모델 1. FM모델(Factorization machine)
