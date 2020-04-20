@@ -179,6 +179,56 @@ ax6.set_title('B03',fontsize=50)
     
   - 학습 코드(tensorflow 1.xx 버전으로 진행)
   ~~~
+  k = 5
+  n, p = X_train.shape
+  X = tf.placeholder('float', shape=[n, p])
+  y = tf.placeholder('float', shape=[n, 1])
+
+  w0 = tf.Variable(tf.zeros([1]))
+  W = tf.Variable(tf.zeros([p]))
+  V = tf.Variable(tf.random_normal([k, p], stddev=0.01))
+  y_hat = tf.Variable(tf.zeros([n, 1]))
+  linear_terms = tf.add(w0, tf.reduce_sum(tf.multiply(W, X), 1, keep_dims=True))
+  pair_interactions = (tf.multiply(0.5,
+                      tf.reduce_sum(
+                          tf.subtract(
+                              tf.pow( tf.matmul(X, tf.transpose(V)), 2),
+                              tf.matmul(tf.pow(X, 2), tf.transpose(tf.pow(V, 2)))),
+                          1, keep_dims=True)))
+  y_hat = tf.add(linear_terms, pair_interactions)
+  # L2 regularized sum of squares loss function over W and V
+  lambda_w = tf.constant(0.001, name='lambda_w')
+  lambda_v = tf.constant(0.001, name='lambda_v')
+
+  l2_norm = (tf.reduce_sum(
+              tf.add(
+                  tf.multiply(lambda_w, tf.pow(W, 2)),
+                  tf.multiply(lambda_v, tf.pow(V, 2)))))
+
+  error = tf.reduce_mean(tf.square(tf.subtract(y, y_hat)))
+  loss = tf.add(error, l2_norm)
+  optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01).minimize(loss)
   
+  N_EPOCHS = 100
+  # Launch the graph.
+  init = tf.global_variables_initializer()
+  with tf.Session() as sess:
+      sess.run(init)
+
+      for epoch in range(N_EPOCHS):
+          indices = np.arange(n)
+          np.random.shuffle(indices)
+          X_train, y_train = X_train[indices], y_train[indices]
+          sess.run(optimizer, feed_dict={X: X_train, y: y_train})
+          if epoch%10==0:
+            print('MSE: ', sess.run(error, feed_dict={X: X_train, y: y_train}))
+
+      print('MSE: ', sess.run(error, feed_dict={X: X_train, y: y_data}))
+      print('Predictions:', sess.run(y_hat, feed_dict={X: X_train, y: y_train}))
+      print('Learnt weights:', sess.run(W, feed_dict={X: X_train, y: y_train}))
+      print('Learnt factors:', sess.run(V, feed_dict={X: X_train, y: y_train}))
   ~~~
-    
+  
+  - 학습 결과, 처참한 결과를 볼 수 있었습니다.
+  
+  
