@@ -173,7 +173,9 @@ ax6.set_title('B03',fontsize=50)
   target=target.values
   X_train, X_test, y_train, y_test = train_test_split(test5, target, test_size=0.2)
   ~~~
-  
+
+- 모델 학습 및 결과
+  - **첫 모델 학습**
   - 모든 변수들을 더미화 시킨 후에 진행했습니다.
     - 더 많은 변수들을 넣으려고 진행했지만 행이 매우 크지 않아서 열의 갯수를 조절하여 학습을 진행했습니다.
     - Y 값을 특정 지을 수 없었기 때문에 총 3가지 경우로 나누어서 모델을 학습시켰습니다.
@@ -235,4 +237,40 @@ ax6.set_title('B03',fontsize=50)
   
   - 학습 결과, 처참한 결과를 볼 수 있었습니다.
   
+  ![image](https://user-images.githubusercontent.com/49123169/79765567-bfbb2200-8361-11ea-92d6-d86bb2359c40.png)
+  
+  - 3가지 경우 모두 안 좋은 결과가 나와서 다른 모델을 써야할 상황이었습니다.
+  - **두번째 모델**
+  - 다른 모델을 찾던 도중, FM 모델을 응용해보면 어떨까라는 생각이 들었습니다.
+    - FM이 회귀모델과 비슷하다는 것을 이용해서 softmax 모델처럼 돌리면 어떨까라는 생각이 들었습니다.
+    - 그래서 똑같은 전처리에다가 이전 검색 기록을 넣어서 돌려보았습니다.
+  - 학습 코드(keras로 구현)
+  ~~~
+  his_list2=[]
+  input_dim=len(x_train.columns)
+  model2 = Sequential()
+  model2.add(Dense(64, input_dim=input_dim,activation='relu'))
+  model2.add(Dropout(0.25))
+  model2.add(Dense(128,activation='relu'))
+  model2.add(Dropout(0.25))
+  model2.add(Dense(256,activation='relu'))
+  model2.add(Dropout(0.25))
+  model2.add(Dense(512,activation='relu'))
+  model2.add(Dropout(0.25))
+  model2.add(Dense(1024,activation='relu'))
+  model2.add(Dropout(0.25))
+  model2.add(Dense(703, activation='softmax'))
+  model2.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+  history2=model2.fit(x_train, y_train, batch_size=64,epochs=200,verbose=2,validation_split=0.2)
+  his_list2.append(history2)
+  ~~~
+  
+  - 학습 결과
+    - 생각보다 좋은 결과가 나와서 해당 모델을 채택해서 예선에 제출했습니다.
+    
+    
+    
+    - 나중에 알고 봤더니 저희 팀이 원했던 한 행동 내에서 검색한 검색어를 모두 활용해서 상품 추천을 해주어야 하는데 이전 검색어로만 추천을 해주는 방식이었습니다. 즉, 고객이 3개를 검색했는데 마지막에 검색한 것만 가지고 상품을 추천해주는 방식이었습니다.
+    
+    
   
