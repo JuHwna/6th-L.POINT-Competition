@@ -106,7 +106,7 @@ ax6.set_title('B03',fontsize=50)
   - 하지만 0,5/0,6이 반복하는 패턴이 매우 많이 나타나 한번 더 유형화 작업으로 분석 시, 유용하게 사용할 수 있을 거라고 판단했습니다.
   - 그래서 각 계열사 별로 한 번 더 고객 행동을 유형화 했습니다.
     - A01 : category1(6), category2(0,6), category3((0,6)<sup>2</sup>~(0,6)<sup>4</sup>), 그 외
-    - A02, A03 : category1(0,5,6), category2((0,5)<sup>2</sup>~(0,5)<sup>4</sup>,6), category3((0,5)<sup>5</sup>~(0,5)<sup>9</sup>,6), 그 외
+    - A02, A03 : category1(0,5,6), category2((0,5)<sup>2</sup>~ (0,5)<sup>4</sup>,6), category3((0,5)<sup>5</sup>~(0,5)<sup>9</sup>,6), 그 외
     
 #### 유형화 후, 분석 결과
 - 구매 고객의 특징
