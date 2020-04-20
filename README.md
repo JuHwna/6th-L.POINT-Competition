@@ -330,10 +330,52 @@ ax6.set_title('B03',fontsize=50)
      ![image](https://user-images.githubusercontent.com/49123169/79768365-a6b47000-8365-11ea-846d-6ac6ee3e38b0.png)
     
     
-    - 나중에 알고 봤더니 저희 팀이 원했던 한 행동 내에서 검색한 검색어를 모두 활용해서 상품 추천을 해주어야 하는데 이전 검색어로만 추천을 해주는 방식이었습니다. 즉, 고객이 3개를 검색했는데 마지막에 검색한 것만 가지고 상품을 추천해주는 방식이었습니다.
+    - 나중에 알고 봤더니 저희 팀이 원했던 한 행동 내에서 검색한 검색어의 브랜드와 타입을 모두 활용해서 상품 추천을 해주어야 하는데 이전 검색어로만 추천을 해주는 방식이었습니다. 즉, 고객이 3개를 검색했는데 마지막에 검색한 것만 가지고 상품을 추천해주는 방식이었습니다.
     
     - 그래서 본선에 진출한 이후에 다시 다른 모델을 찾기 시작했습니다.
     
 #### 추천 모델 2. Wide & Deep Learning Model
-- 모델 선정 이유
-  - 고객의 하나의 행동 패턴에서 
+##### 모델 선정 이유
+  - 고객의 하나의 행동 패턴에서 있는 브랜드와 타입을 다 담을 수 있었습니다.
+    - Doc2Vec을 통해 그 방식이 가능했습니다.
+  - 또한 고객 정보도 사용할 수 있어 주어진 데이터를 적극적으로 사용할 수 있겠다는 생각에 학습을 진행했습니다.
+  
+##### 데이터 전처리 과정
+- wide & deep learning 모델을 진행하기 위해선 많은 절차가 필요했지만 2일 정도 고생하여 구현해봤습니다.
+   1. 고객별 Brand Data에 대한 임베딩을 수행
+   ~~~
+   from gensim.models import doc2vec
+   from collections import namedtuple
+   import multiprocessing
+   docs=test2.groupby(['CLNT_ID','CATEGORY'])['BRAND1'].agg(' '.join).reset_index() # doc2vec 방식으로 진행
+   docs2 = [(str(row['BRAND1']).split(), row['CATEGORY']) for idx, row in docs.iterrows()]
+   TaggedDocument = namedtuple('TaggedDocument', 'words tags')
+   tagged_docs = [TaggedDocument(d, [c]) for d, c in docs2]
+   cores = multiprocessing.cpu_count()
+   
+   if True:
+    doc_vectorizer = doc2vec.Doc2Vec(
+    
+    dm = 0,            
+    dbow_words = 1,    
+    window = 8,        
+    size = 300,         
+    alpha = 0.01,     
+    min_alpha = 0.01,
+    
+    seed = 1,
+    negative = 10,
+    sample= 1e-5,      
+    min_count=30,      
+    workers=cores,     
+    hs = 1            
+    )
+
+    doc_vectorizer.build_vocab(tagged_docs)
+    print(str(doc_vectorizer))
+
+    for epoch in range(20):
+        doc_vectorizer.train(tagged_docs,epochs=doc_vectorizer.iter,total_examples=doc_vectorizer.corpus_count)
+        doc_vectorizer.alpha -= 0.001
+        doc_vectorizer.min_alpha = doc_vectorizer.alpha
+   ~~~
