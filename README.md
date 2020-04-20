@@ -156,4 +156,29 @@ ax6.set_title('B03',fontsize=50)
   - 하지만 저희가 가진 데이터는 평점 데이터도 없을 뿐더러 고객 정보 등 다양한 데이터가 있기 때문에 데이터 손실이 매우 커서 다른 모델을 찾았습니다.
   - >Factorization Machines (Steffen Rendle)
     - 해당 모델의 경우, 회귀분석처럼 여러 변수들을 넣고 돌려도 되는 추천 시스템 알고리즘인 것을 확인했습니다.
+    
+    ![image](https://user-images.githubusercontent.com/49123169/79763963-b630ba80-835f-11ea-9b8f-5a507b2a84d4.png)
+    
+    - 고객 행동 유형화, 고객 정보, 머무른 시간 등 주어진 데이터를 살릴 수 있어 해당 모델을 채택하여 모델을 돌릴 작업을 진행했습니다.
+
+- 데이터 전처리
+  - 해당 논문에 있는 것처럼 데이터를 만들기 위해 여러 작업들을 거쳤습니다.
   
+  ~~~
+  dayofweek_1_onehot=pd.get_dummies(new_category_1['dayofweek'])
+  hour_1_onehot=pd.get_dummies(new_category_1['hour'])
+  test2=pd.concat([cate_1_onehot,kwd_1_onehot,other_item,dayofweek_1_onehot,hour_1_onehot],axis=1)
+  target=new_category_1['target']
+  test5=test2.values
+  target=target.values
+  X_train, X_test, y_train, y_test = train_test_split(test5, target, test_size=0.2)
+  ~~~
+  
+  - 모든 변수들을 더미화 시킨 후에 진행했습니다.
+    - 더 많은 변수들을 넣으려고 진행했지만 행이 매우 크지 않아서 열의 갯수를 조절하여 학습을 진행했습니다.
+    
+  - 학습 코드(tensorflow 1.xx 버전으로 진행)
+  ~~~
+  
+  ~~~
+    
