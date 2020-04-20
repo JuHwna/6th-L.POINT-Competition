@@ -342,6 +342,7 @@ ax6.set_title('B03',fontsize=50)
   
 ##### 데이터 전처리 과정
 - wide & deep learning 모델을 진행하기 위해선 많은 절차가 필요했지만 2일 정도 고생하여 구현해봤습니다.
+- *https://github.com/Park-Ju-hyeong/Wide-Deep-Learning* 해당 깃허브에 코드로 구현해주신 분이 계셔서 저희 데이터에 맞게 수정한 후 돌렸습니다.
    1. 고객별 Brand Data에 대한 임베딩을 수행
    ~~~
    from gensim.models import doc2vec
@@ -378,4 +379,49 @@ ax6.set_title('B03',fontsize=50)
         doc_vectorizer.train(tagged_docs,epochs=doc_vectorizer.iter,total_examples=doc_vectorizer.corpus_count)
         doc_vectorizer.alpha -= 0.001
         doc_vectorizer.min_alpha = doc_vectorizer.alpha
+    item = [doc_vectorizer.infer_vector(doc.words) for doc in tagged_docs]
+    item_pd = pd.DataFrame(item)
+    item_pd.head()
    ~~~
+   
+   2. 고객별 Type data를 Cross Product를 수행합니다
+   ~~~
+   import tensorflow as tf
+   from tensorflow.contrib import layers
+   from datetime import datetime
+   from sklearn.preprocessing import LabelEncoder
+   le = LabelEncoder()
+   cross_col =[]
+   for i in range(345):
+       for j in range(345-i):
+           cross_col.append([segment.columns[i], segment.columns[i + j + 1]])
+   import random
+   cross_col2=sampleList = random.sample(cross_col, 54000) 
+   #교차 곱을 하면 양이 엄청나게 많아져서 colab 기준으로 gpu 한계 와서 터집니다
+   #그래서 랜덤으로 몇 개만 뽑고 진행했습니다.
+   ~~~
+   
+   3. brand embedding과 type cross product를 조합시켜 one-hot vector encoding화 시킵니다
+   ~~~
+   item_pd2=cp.deepcopy(item_pd)
+   segment2=cp.deepcopy(segment)
+   segment_str = segment2.astype(str)
+   wide_ = pd.concat([item_pd2, segment_str], axis=1)
+   def cross_columns(data, cross_colnames):
+   for i in cross_colnames:
+        tmp = 0
+        for j in i:
+            tmp += 1
+            if tmp == 1:
+                cross_data = data[j]
+                columns = j
+            else:
+                cross_data = cross_data + data[j]
+                columns = columns + "+" + j
+        data[columns] = cross_data
+        
+     return data
+   wide_cross = cross_columns(wide_, cross_col2)
+   wide_data=pd.get_dummies(wide_cross)
+   ~~~
+   
