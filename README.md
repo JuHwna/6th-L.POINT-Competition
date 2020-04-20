@@ -381,7 +381,6 @@ ax6.set_title('B03',fontsize=50)
         doc_vectorizer.min_alpha = doc_vectorizer.alpha
     item = [doc_vectorizer.infer_vector(doc.words) for doc in tagged_docs]
     item_pd = pd.DataFrame(item)
-    item_pd.head()
    ~~~
    
    2. 고객별 Type data를 Cross Product를 수행합니다
@@ -425,3 +424,28 @@ ax6.set_title('B03',fontsize=50)
    wide_data=pd.get_dummies(wide_cross)
    ~~~
    
+   4. 고객 정보들을 factor화 시킵니다.
+   ~~~
+   user=test2.groupby(['CLNT_ID','CATEGORY','CLNT_GENDER','CLNT_AGE','DVC_CTG_NM']).size().reset_index()
+   user_features=user.loc[:,['CATEGORY','CLNT_GENDER','CLNT_AGE','DVC_CTG_NM']]
+   user_features['CLNT_GENDER']=le.fit_transform(user_features['CLNT_GENDER'])
+   user_features['CLNT_AGE']=le.fit_transform(user_features['CLNT_AGE'])
+   user_features['CATEGORY']=le.fit_transform(user_features['CATEGORY'])
+   user_features['DVC_CTG_NM']=le.fit_transform(user_features['DVC_CTG_NM'])
+   ~~~
+
+   5. 위에서 만들어진 결과들을 가지고 wide dataset과 deep data set을 만들면 됩니다.
+   ~~~
+   user_features.reset_index(drop=True,inplace=True)
+   deep_data=pd.concat([item_pd,segment,user_features],axis=1)
+   deep_col = deep_data.columns
+   ~~~
+   
+- 만들어진 데이터셋의 명칭
+  - wide data set : wide_data
+  - deep data set : deep_data
+  
+##### 모델 학습 및 결과
+- 모델 학습 코드도 매우 길어 다른 폴더에 올리겠습니다.
+- 모델 학습 결과, 추천 시스템 치고 나쁘지 않은 예측률을 보였습니다.
+
