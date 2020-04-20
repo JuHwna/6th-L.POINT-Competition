@@ -80,7 +80,10 @@ ax6.set_title('B03',fontsize=50)
 #### (2) 사전 조사
 - 고객 행동 유형화하기 위해 필요한 지식들을 습득하기 위해 고객 유형에 대해 논문이나 관련 사이트를 찾아 글을 읽었습니다.
   >Designing for 5 Types of E-Commerce Shoppers "Nielsen Norman Group"
-    
+  
+![image](https://user-images.githubusercontent.com/49123169/79756433-91374a00-8355-11ea-8f7d-17f4ebc5fe83.png)
+
+
 ##### 해당 과정 속의 결과
 - EDA를 통해 총 세 가지의 방향성을 잡을 수 있었습니다.
    1) 온라인 행동 정보와 거래 정보를 조인할 시 거의 모든 데이터를 손실하기 때문에 온라인 행동 정보로만 분석을 진행
@@ -107,6 +110,9 @@ ax6.set_title('B03',fontsize=50)
   - 그래서 각 계열사 별로 한 번 더 고객 행동을 유형화 했습니다.
     - A01 : category1(6), category2(0,6), category3((0,6)<sup>2</sup>~(0,6)<sup>4</sup>), 그 외
     - A02, A03 : category1(0,5,6), category2((0,5)<sup>2</sup>~ (0,5)<sup>4</sup>,6), category3((0,5)<sup>5</sup>~(0,5)<sup>9</sup>,6), 그 외
+    
+    ![image](https://user-images.githubusercontent.com/49123169/79756459-9b594880-8355-11ea-8fa3-1e5f4821f113.png)
+    
     
 #### 유형화 후, 분석 결과
 - 구매 고객의 특징
