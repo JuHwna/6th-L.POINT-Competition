@@ -477,3 +477,5 @@ ax6.set_title('B03',fontsize=50)
 ## 9. 느낀 점
 - 로그 데이터를 더 분석해보고 싶은 생각이 들었습니다.
 - 고객 행동에 대해 분석하는 것에 재미를 느낄 수 있었습니다.
+
+[![HitCount](http://hits.dwyl.com/JuHwna/6th-LPOINT-Competition.svg)](http://hits.dwyl.com/JuHwna/6th-LPOINT-Competition)
